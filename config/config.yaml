@@ -9,22 +9,21 @@
 # 1. 基础设置
 # ===============================================================
 app:
-  # 时区配置（修复截断错误）
   timezone: "Asia/Shanghai"
-  show_version_update: true           # 显示版本更新提示
+  show_version_update: true
 
 # ===============================================================
-# 1.5 调度系统 —— 什么时间做什么事
+# 1.5 调度系统
 # ===============================================================
 schedule:
-  enabled: true                         # 是否启用调度系统
-  preset: "morning_evening"             # 预设模板名称
+  enabled: true
+  preset: "morning_evening"
 
 # ===============================================================
 # 2. 数据源 - 热榜平台
 # ===============================================================
 platforms:
-  enabled: true                         # 是否启用热榜平台抓取
+  enabled: true
   sources:
     - id: "toutiao"
       name: "今日头条"
@@ -34,99 +33,47 @@ platforms:
       name: "华尔街见闻"
     - id: "thepaper"
       name: "澎湃新闻"
-    - id: "bilibili-hot-search"
-      name: "bilibili 热搜"
     - id: "cls-hot"
       name: "财联社热门"
-    - id: "ifeng"
-      name: "凤凰网"
-    - id: "tieba"
-      name: "贴吧"
     - id: "weibo"
       name: "微博"
-    - id: "douyin"
-      name: "抖音"
     - id: "zhihu"
       name: "知乎"
 
 # ===============================================================
-# 3. 数据源 - RSS 订阅（核心修改：加入你要的香港/美股/科技源）
+# 3. 数据源 - RSS 订阅（精简版：仅保留可用/核心源）
 # ===============================================================
 rss:
-  enabled: true                       # 是否启用 RSS 抓取
+  enabled: true
   freshness_filter:
-    enabled: true                     # 是否启用新鲜度过滤
-    max_age_days: 3                   # 最大文章年龄（天）
+    enabled: true
+    max_age_days: 1  # 全局改为1天，聚焦最新资讯
 
   feeds:
-    # 原有 RSS 源（完整保留）
-    - id: "hacker-news"
-      name: "Hacker News"
-      url: "https://hnrss.org/frontpage"
-    - id: "ruanyifeng"
-      name: "阮一峰的网络日志"
-      url: "http://www.ruanyifeng.com/blog/atom.xml"
-    - id: "yahoo-finance"
-      name: "雅虎财经"
-      url: "https://finance.yahoo.com/news/rssindex"
-      enabled: false                  # 禁用
+    # 🇺🇸 美国股票财经（仅保留实测可用的核心源）
+    - id: "cnbc-markets"
+      name: "CNBC 美股市场"
+      url: "https://www.cnbc.com/id/100003114/device/rss/rss.html"
+      max_age_days: 1  # 美股新闻时效性极强
 
-    # 新增：🇭🇰 香港本地新闻 RSS（你指定的）
-    - id: "hk-free-press"
-      name: "香港自由新闻"
-      url: "https://hongkongfp.com/feed"
-      max_age_days: 1                 # 只推送1天内的本地新闻
-    - id: "hk-gov-news"
-      name: "香港政府新闻网"
-      url: "https://www.news.gov.hk/rss"
-      max_age_days: 1
-    - id: "rthk-local"
-      name: "RTHK 本地新闻"
-      url: "https://rthk.hk/rthk/news/rss/c_expressnews_clocal.xml"
-      max_age_days: 1
+    # 🌍 世界 IT 科技（仅保留实测可用的核心源）
+    - id: "the-verge"
+      name: "The Verge 全球科技"
+      url: "https://www.theverge.com/rss/index.xml"
+      max_age_days: 1  # 科技新闻只看最新
+
+    # 🇭🇰 香港本地新闻（保留1个最稳定的源）
     - id: "rthk-finance"
-      name: "RTHK 财经新闻"
+      name: "RTHK 香港财经新闻"
       url: "https://rthk.hk/rthk/news/rss/c_expressnews_cfinance.xml"
       max_age_days: 1
-
-    # 新增：🇺🇸 美国股票财经 RSS（你指定的）
-    - id: "marketwatch"
-      name: "MarketWatch"
-      url: "https://feeds.content.dowjones.io/public/rss/mw_marketwatch"
-      max_age_days: 1
-    - id: "cnbc-markets"
-      name: "CNBC Markets"
-      url: "https://www.cnbc.com/id/100003114/device/rss/rss.html"
-      max_age_days: 1                 # 美股新闻时效性强，只保留1天
-    - id: "sec-edgar"
-      name: "SEC 最新文件"
-      url: "https://www.sec.gov/rss"
-      max_age_days: 3
-
-    # 新增：🌍 世界 IT 科技 RSS（你指定的）
-    - id: "computer-weekly"
-      name: "Computer Weekly"
-      url: "https://www.computerweekly.com/rss/All-Content"
-      max_age_days: 2
-    - id: "techcrunch"
-      name: "TechCrunch"
-      url: "https://techcrunch.com/feed/"
-      max_age_days: 1
-    - id: "the-verge"
-      name: "The Verge"
-      url: "https://www.theverge.com/rss/index.xml"
-      max_age_days: 1
-    - id: "techrepublic"
-      name: "TechRepublic 技术新闻"
-      url: "https://www.techrepublic.com/rssfeeds/articles/"
-      max_age_days: 2
 
 # ===============================================================
 # 4. 报告模式
 # ===============================================================
 report:
-  mode: "current"                     # 可选: daily | current | incremental
-  display_mode: "keyword"             # 分组维度: keyword | platform
+  mode: "current"
+  display_mode: "keyword"
   sort_by_position_first: false
   rank_threshold: 5
   max_news_per_keyword: 0
@@ -136,23 +83,21 @@ report:
 # ===============================================================
 display:
   region_order:
-    - new_items                       # 1️⃣ 新增热点区域
-    - hotlist                         # 2️⃣ 热榜区域
-    - rss                             # 3️⃣ RSS 订阅区域
-    - standalone                      # 4️⃣ 独立展示区
-    - ai_analysis                     # 5️⃣ AI 分析区域
+    - hotlist
+    - rss
+    - ai_analysis
 
   regions:
     hotlist: true
     new_items: false
-    rss: true                         # 确保 RSS 区域开启
+    rss: true
     standalone: false
     ai_analysis: true
 
   standalone:
     platforms: ["zhihu", "wallstreetcn-hot"]
-    rss_feeds: []
-    max_items: 20
+    rss_feeds: ["the-verge","rthk-finance","cnbc-markets"]
+    max_items: 10  # 精简独立展示条数
 
 # ===============================================================
 # 6. 推送通知
@@ -176,17 +121,6 @@ notification:
       to: ""
       smtp_server: ""
       smtp_port: ""
-    ntfy:
-      server_url: "https://ntfy.sh"
-      topic: ""
-      token: ""
-    bark:
-      url: ""
-    slack:
-      webhook_url: ""
-    generic_webhook:
-      webhook_url: ""
-      payload_template: ""
 
 # ===============================================================
 # 7. 存储配置
@@ -199,30 +133,18 @@ storage:
     html: true
   local:
     data_dir: "output"
-    retention_days: 0
-  remote:
-    retention_days: 0
-    endpoint_url: ""
-    bucket_name: ""
-    access_key_id: ""
-    secret_access_key: ""
-    region: ""
-  pull:
-    enabled: false
-    days: 7
+    retention_days: 7  # 本地保留7天数据即可
 
 # ===============================================================
-# 8. AI 模型配置（共享）
+# 8. AI 模型配置
 # ===============================================================
 ai:
   model: "deepseek/deepseek-chat"
   api_key: ""
   api_base: ""
-  timeout: 120
-  temperature: 1.0
-  max_tokens: 5000
-  num_retries: 1
-  fallback_models: []
+  timeout: 60  # 缩短超时，提升响应速度
+  temperature: 0.7  # 降低随机性，分析更精准
+  max_tokens: 2000  # 精简AI输出，聚焦核心
 
 # ===============================================================
 # 9. AI 分析功能
@@ -231,47 +153,38 @@ ai_analysis:
   enabled: true
   language: "Chinese"
   prompt_file: "ai_analysis_prompt.txt"
-  mode: "follow_report"
-  max_news_for_analysis: 150
-  include_rss: true                   # 建议开启：让 AI 分析 RSS 内容
-  include_standalone: true
-  include_rank_timeline: true
+  mode: "current"
+  max_news_for_analysis: 50  # 大幅减少分析条数，降低成本
+  include_rss: true
+  include_standalone: false
+  include_rank_timeline: false  # 关闭冗余时间线，减少token消耗
 
 # ===============================================================
 # 10. AI 翻译功能
 # ===============================================================
 ai_translation:
-  enabled: false
-  language: "中文"
-  prompt_file: "ai_translation_prompt.txt"
+  enabled: true
 
 # ===============================================================
 # 11. 高级设置
 # ===============================================================
 advanced:
   debug: false
-  version_check_url: "https://raw.githubusercontent.com/sansan0/TrendRadar/refs/heads/master/version"
-  mcp_version_check_url: "https://raw.githubusercontent.com/sansan0/TrendRadar/refs/heads/master/version_mcp"
-  configs_version_check_url: "https://raw.githubusercontent.com/sansan0/TrendRadar/refs/heads/master/version_configs"
   crawler:
-    request_interval: 2000
+    request_interval: 3000
     use_proxy: false
     default_proxy: "http://127.0.0.1:10801"
   rss:
-    request_interval: 1000
-    timeout: 15
+    request_interval: 2000
+    timeout: 10
     use_proxy: false
-    proxy_url: ""
   weight:
-    rank: 0.6
-    frequency: 0.3
+    rank: 0.7
+    frequency: 0.2
     hotness: 0.1
-  max_accounts_per_channel: 3
+  max_accounts_per_channel: 2
   batch_size:
-    default: 4000
-    dingtalk: 20000
-    feishu: 30000
-    bark: 4000
-    slack: 4000
-  batch_send_interval: 3
-  feishu_message_separator: "━━━━━━━━━━━━━━━━"
+    default: 3000
+    dingtalk: 15000
+    feishu: 20000
+  batch_send_interval: 2
